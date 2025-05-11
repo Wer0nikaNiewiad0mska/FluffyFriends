@@ -1,0 +1,16 @@
+C:\Users\User\source\repos\FluffyFriends\EShop.Application\bin\Debug\net8.0\EShop.Application.deps.json
+C:\Users\User\source\repos\FluffyFriends\EShop.Application\bin\Debug\net8.0\EShop.Application.dll
+C:\Users\User\source\repos\FluffyFriends\EShop.Application\bin\Debug\net8.0\EShop.Application.pdb
+C:\Users\User\source\repos\FluffyFriends\EShop.Application\bin\Debug\net8.0\EShop.Domain.dll
+C:\Users\User\source\repos\FluffyFriends\EShop.Application\bin\Debug\net8.0\EShop.Domain.pdb
+C:\Users\User\source\repos\FluffyFriends\EShop.Application\obj\Debug\net8.0\EShop.Application.csproj.AssemblyReference.cache
+C:\Users\User\source\repos\FluffyFriends\EShop.Application\obj\Debug\net8.0\EShop.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\source\repos\FluffyFriends\EShop.Application\obj\Debug\net8.0\EShop.Application.AssemblyInfoInputs.cache
+C:\Users\User\source\repos\FluffyFriends\EShop.Application\obj\Debug\net8.0\EShop.Application.AssemblyInfo.cs
+C:\Users\User\source\repos\FluffyFriends\EShop.Application\obj\Debug\net8.0\EShop.Application.csproj.CoreCompileInputs.cache
+C:\Users\User\source\repos\FluffyFriends\EShop.Application\obj\Debug\net8.0\EShop.Application.sourcelink.json
+C:\Users\User\source\repos\FluffyFriends\EShop.Application\obj\Debug\net8.0\EShop.Ap.140E939F.Up2Date
+C:\Users\User\source\repos\FluffyFriends\EShop.Application\obj\Debug\net8.0\EShop.Application.dll
+C:\Users\User\source\repos\FluffyFriends\EShop.Application\obj\Debug\net8.0\refint\EShop.Application.dll
+C:\Users\User\source\repos\FluffyFriends\EShop.Application\obj\Debug\net8.0\EShop.Application.pdb
+C:\Users\User\source\repos\FluffyFriends\EShop.Application\obj\Debug\net8.0\ref\EShop.Application.dll
