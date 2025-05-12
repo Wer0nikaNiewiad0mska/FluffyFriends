@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "gDP8uaIVyvs8c/b2rFzJ6AJCeMqENT8/MwOpaJ3kD9w=",
+  "Source": "EShopService",
+  "BasePath": "_content/EShopService",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

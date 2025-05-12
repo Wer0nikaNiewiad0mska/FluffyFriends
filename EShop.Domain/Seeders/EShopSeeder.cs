@@ -46,7 +46,7 @@ public class EShopSeeder(DataContext context) : IEShopSeeder
                 },
                 new Product
                 {
-                    Name = "Ryszard the Hamster",
+                    Name = "Kiki the Hamster",
                     ean = "1001001001002",
                     price = 49.99m,
                     stock = 40,
