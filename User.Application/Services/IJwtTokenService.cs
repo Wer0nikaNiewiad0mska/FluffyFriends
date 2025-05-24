@@ -8,5 +8,5 @@ namespace User.Application.Services;
 
 public interface IJwtTokenService
 {
-    string GenerateTOken(int userId, List<string> roles);
+    string GenerateTOken(int userId, string username,List<string> roles);
 }

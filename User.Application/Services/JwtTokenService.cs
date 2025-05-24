@@ -15,13 +15,14 @@ public class JwtTokenService : IJwtTokenService
 {
     private readonly JwtSettings _settings;
 
-    public JwtTokenService(IOptions<JwtSettings> settings) { _settings = settings.Value; } //fix
+    public JwtTokenService(IOptions<JwtSettings> settings) { _settings = settings.Value; }
 
-    public string GenerateTOken(int userId, List<string> roles)
+    public string GenerateTOken(int userId, string username, List<string> roles)
     {
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, userId.ToString())
+            new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+            new Claim(ClaimTypes.Name, username)
         };
 
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
