@@ -1,19 +1,21 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Cryptography;
 using System.Text;
 using User.Application;
+using Microsoft.EntityFrameworkCore;
 using User.Application.Services;
-using User.Domain;
+using User.Domain.Repositories;
+using Microsoft.OpenApi.Models;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-// JWT config
+// Wczytaj ustawienia JWT z appsettings.json
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
-var jwtSettings = builder.Configuration.GetSection("Jwt");
-builder.Services.Configure<JwtSettings>(jwtSettings);
+var jwtConfig = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
 
+// JWT - Autoryzacja z kluczem publicznym RSA
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -21,7 +23,10 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    var jwtConfig = jwtSettings.Get<JwtSettings>();
+    var rsa = RSA.Create();
+    rsa.ImportFromPem(File.ReadAllText("data/public.key")); // Œcie¿ka do pliku public.key
+    var publicKey = new RsaSecurityKey(rsa);
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -30,59 +35,58 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = jwtConfig.Issuer,
         ValidAudience = jwtConfig.Audience,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.Key))
+        IssuerSigningKey = publicKey
     };
 });
-builder.Services.AddAuthorization();
 
+// Autoryzacja ról
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy => policy.RequireRole("Administrator"));
     options.AddPolicy("EmployeeOnly", policy => policy.RequireRole("Employee"));
 });
 
+// Rejestracja zale¿noœci
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
-builder.Services.AddScoped<ILoginService, LoginService>();
 
-
+// Kontrolery i Swagger
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new() { Title = "UserService", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "UserService", Version = "v1" });
 
-    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Description = "Wpisz: Bearer {twój token JWT}",
+        Description = "Wpisz token w formacie: Bearer {token}",
         Name = "Authorization",
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer"
     });
 
-    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
-            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            new OpenApiSecurityScheme
             {
-                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                Reference = new OpenApiReference
                 {
-                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Type = ReferenceType.SecurityScheme,
                     Id = "Bearer"
                 }
             },
-            Array.Empty<string>()
+            new List<string>()
         }
     });
 });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -91,13 +95,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-
-//nie zmieniaæ kolejnosci tego bo nie dzia³a!!!!!!!
+// KOLEJNOŒÆ MA ZNACZENIE
 app.UseAuthentication();
 app.UseAuthorization();
-//tych dwoch
-
-
 
 app.MapControllers();
 

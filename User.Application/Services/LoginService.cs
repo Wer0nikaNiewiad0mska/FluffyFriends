@@ -5,6 +5,7 @@ using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
 using User.Domain.CustomExceptions;
+using User.Domain.Models;
 using User.Application.Services;
 
 namespace User.Application.Services;

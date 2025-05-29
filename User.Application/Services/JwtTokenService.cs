@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using User.Domain.Models;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
+using System.Security.Cryptography;
 
 namespace User.Application.Services;
 
@@ -19,23 +20,27 @@ public class JwtTokenService : IJwtTokenService
 
     public string GenerateTOken(int userId, string username, List<string> roles)
     {
+        var rsa = RSA.Create();
+        rsa.ImportFromPem(File.ReadAllText("data/private.key"));
+        var rsaSecurityKey = new RsaSecurityKey(rsa);
+
+        var credentials = new SigningCredentials(rsaSecurityKey, SecurityAlgorithms.RsaSha256);
+
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-            new Claim(ClaimTypes.Name, username)
+            new Claim(JwtRegisteredClaimNames.Sub, username),
+            new Claim("userId", userId.ToString())
         };
 
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
-
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Key));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
             issuer: _settings.Issuer,
             audience: _settings.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(_settings.ExpiresInMinutes),
-            signingCredentials: creds);
+            expires: DateTime.UtcNow.AddMinutes(60),
+            signingCredentials: credentials
+        );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
