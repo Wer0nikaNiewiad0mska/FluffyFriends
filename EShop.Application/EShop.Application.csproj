@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="StackExchange.Redis" Version="2.8.37" />
+	  <PackageReference Include="Carbon.Redis" Version="3.0.1" />
   </ItemGroup>
 
   <ItemGroup>

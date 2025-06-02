@@ -42,7 +42,7 @@ public class EShopSeeder(DataContext context) : IEShopSeeder
                     sku = "PLSH-SHARK-001",
                     category = plushies!,
                     created_by = Guid.NewGuid(),
-                    updated_by = Guid.NewGuid()
+                    updated_by = Guid.NewGuid(),
                 },
                 new Product
                 {
@@ -53,7 +53,7 @@ public class EShopSeeder(DataContext context) : IEShopSeeder
                     sku = "PLSH-HAMSTER-001",
                     category = plushies!,
                     created_by = Guid.NewGuid(),
-                    updated_by = Guid.NewGuid()
+                    updated_by = Guid.NewGuid(),
                 },
                 new Product
                 {
@@ -64,7 +64,7 @@ public class EShopSeeder(DataContext context) : IEShopSeeder
                     sku = "KEYC-CUTE-001",
                     category = keychains!,
                     created_by = Guid.NewGuid(),
-                    updated_by = Guid.NewGuid()
+                    updated_by = Guid.NewGuid(),
                 },
                 new Product
                 {
@@ -75,7 +75,7 @@ public class EShopSeeder(DataContext context) : IEShopSeeder
                     sku = "STAT-NOTE-001",
                     category = stationery!,
                     created_by = Guid.NewGuid(),
-                    updated_by = Guid.NewGuid()
+                    updated_by = Guid.NewGuid(),
                 }
             };
 
