@@ -2,33 +2,43 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Authentication;
-using System.Text;
-using System.Threading.Tasks;
+
 using User.Domain.CustomExceptions;
 using User.Domain.Models;
-using User.Application.Services;
+using User.Application.Services.Interfaces;
+using User.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace User.Application.Services;
 
 public class LoginService : ILoginService
 {
     protected IJwtTokenService _jwtTokenService;
-    private readonly IUserRepository _userRepository;
+    private readonly DataContext _context;
+    private readonly PasswordHasher<User_> _hasher = new();
 
-    public LoginService(IJwtTokenService jwtTokenService, IUserRepository userRepository)
+    public LoginService(IJwtTokenService jwtTokenService, DataContext context)
     {
         _jwtTokenService = jwtTokenService;
-        _userRepository = userRepository;
-    }
+        _context = context;
+       }
 
     public string Login(string username, string password)
     {
-        var user = _userRepository.GetByUsername(username);
-        if (user == null || user.Password != password)
+        var user = _context.Users
+            .Include(u => u.Roles)
+            .FirstOrDefault(u => u.Username == username);
+
+        if (user == null)
             throw new InvalidCredentialsException();
 
-        var token = _jwtTokenService.GenerateTOken(user.Id, user.Username, new List<string> { user.Role });
-        return token;
+        var result = _hasher.VerifyHashedPassword(user, user.PasswordHash, password);
+        if (result == PasswordVerificationResult.Failed)
+            throw new InvalidCredentialsException();
+
+        var roles = user.Roles.Select(r => r.Name).ToList();
+        return _jwtTokenService.GenerateTOken(user.Id, user.Username, roles);
     }
 
 }

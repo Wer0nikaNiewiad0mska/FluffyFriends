@@ -1,11 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using User.Application.Services;
+using System.Text.RegularExpressions;
+using User.Application.Services.Interfaces;
 using User.Domain.CustomExceptions;
 using User.Domain.Models;
+using User.Domain.Repositories;
+
 
 namespace UserService.Controllers;
 
@@ -14,12 +19,14 @@ namespace UserService.Controllers;
 public class LoginController : ControllerBase
 {
     private readonly ILoginService _loginService;
-    protected readonly IUserRepository _userRepository;
+    private readonly DataContext _context;
+    private readonly IPasswordHasher<User_> _hasher;
 
-    public LoginController(ILoginService loginservice, IUserRepository userRepository)
+    public LoginController(ILoginService loginservice, DataContext context, IPasswordHasher<User_> hasher)
     {
         _loginService = loginservice;
-        _userRepository = userRepository;
+        _context = context;
+        _hasher = hasher;
     }
 
     [HttpPost]
@@ -30,27 +37,37 @@ public class LoginController : ControllerBase
             var token = _loginService.Login(req.Username, req.Password);
             return Ok(new { token });
         }
-        catch (InvalidCredentialsException) { return Unauthorized(); }
+        catch (InvalidCredentialsException) { return Unauthorized("Invalid login data."); }
     }
 
     [HttpPost("register")]
-    public IActionResult Register([FromBody] User.Domain.Models.LoginRequest req)
+    public async Task<IActionResult> Register([FromBody] User.Domain.Models.RegisterRequest req)
     {
-        var existing = _userRepository.GetByUsername(req.Username);
-        if (existing != null)
-            return Conflict("Username already exists");
+        if (!Regex.IsMatch(req.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            return BadRequest("Not real email address.");
 
-        var user = new UserAccount
+        var existing = await _context.Users.FirstOrDefaultAsync(u => u.Username == req.Username);
+        if (existing != null)
+            return Conflict("Username already exists.");
+
+        var clientRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Client");
+        if (clientRole == null)
+            return StatusCode(500, "Role not found");
+
+        var user = new User_
         {
             Username = req.Username,
-            Password = req.Password,
-            Role = "Client"
+            Email = req.Email,
+            PasswordHash = _hasher.HashPassword(null, req.Password),
+            Roles = new List<Role> { clientRole }
         };
 
-        _userRepository.Add(user);
-        return Ok();
-    }
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
 
+        return Ok("Account created.");
+    }
+    /*
     [HttpGet("me")]
     [Authorize]
     public IActionResult GetUser()
@@ -59,20 +76,20 @@ public class LoginController : ControllerBase
         var username = User.FindFirstValue(ClaimTypes.Name);
         var roles = User.FindAll(ClaimTypes.Role).Select(r => r.Value).ToList();
 
-        return Ok(new { userId, username, roles });
-    }
+        return Ok(new { username, roles });
+    } */
 
     [HttpGet("admin")]
     [Authorize(Policy = "AdminOnly")]
     public IActionResult AdminOnly()
     {
-        return Ok("Dostęp dla administratora");
+        return Ok("Admin access");
     }
 
     [HttpGet("employee")]
     [Authorize(Policy = "EmployeeOnly")]
     public IActionResult EmployeeOnly()
     {
-        return Ok("Dostęp dla pracownika");
+        return Ok("Employee access.");
     }
 }

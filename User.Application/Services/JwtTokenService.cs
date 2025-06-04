@@ -9,6 +9,7 @@ using User.Domain.Models;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using User.Application.Services.Interfaces;
 
 namespace User.Application.Services;
 
@@ -28,8 +29,9 @@ public class JwtTokenService : IJwtTokenService
 
         var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, username),
-            new Claim("userId", userId.ToString())
+            new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+            new Claim(ClaimTypes.Name, username),
+
         };
 
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));

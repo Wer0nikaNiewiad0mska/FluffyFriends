@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using User.Application.Services;
 using User.Domain.Repositories;
 using Microsoft.OpenApi.Models;
+using User.Application.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using User.Domain.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -49,7 +52,7 @@ builder.Services.AddAuthorization(options =>
 // Rejestracja zale¿noœci
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
-builder.Services.AddSingleton<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IPasswordHasher<User_>, PasswordHasher<User_>>();
 
 // Kontrolery i Swagger
 builder.Services.AddControllers();
