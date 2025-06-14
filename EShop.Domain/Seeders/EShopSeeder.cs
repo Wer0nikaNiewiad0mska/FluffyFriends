@@ -1,5 +1,6 @@
 ﻿using EShop.Domain.Models;
 using EShop.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,9 +28,9 @@ public class EShopSeeder(DataContext context) : IEShopSeeder
 
         if (!context.Products.Any())
         {
-            var plushies = context.Categories.FirstOrDefault(c => c.Name == "Plushies");
-            var keychains = context.Categories.FirstOrDefault(c => c.Name == "Keychains");
-            var stationery = context.Categories.FirstOrDefault(c => c.Name == "Stationery");
+            var plushies = await context.Categories.FirstOrDefaultAsync(c => c.Name == "Plushies");
+            var keychains = await context.Categories.FirstOrDefaultAsync(c => c.Name == "Keychains");
+            var stationery = await context.Categories.FirstOrDefaultAsync(c => c.Name == "Stationery");
 
             var products = new List<Product>
             {
