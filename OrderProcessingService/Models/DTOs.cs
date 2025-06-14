@@ -19,3 +19,7 @@ public class ProcessOrderRequest
     public List<OrderItemDto> Items { get; set; } = new();
     public string? DiscountCode { get; set; } 
 }
+public class UserDto
+{
+    public string Email { get; set; } = string.Empty;
+}
