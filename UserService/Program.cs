@@ -49,6 +49,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("EmployeeOnly", policy => policy.RequireRole("Employee"));
 });
 
+
 // Rejestracja zale¿noœci
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
@@ -87,7 +88,19 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddDbContext<DataContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+
 var app = builder.Build();
+
+//baza dnaych
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
+    dbContext.Database.Migrate();
+}
 
 // Middleware
 if (app.Environment.IsDevelopment())

@@ -34,16 +34,16 @@ public class AccountController : ControllerBase
         var history = new[]
         {
             new {
-                idZamowienia = 1,
-                dataZamowienia = DateTime.UtcNow,
-                produkty = new[] {
-                    new { idProduktu = 101, nazwaProduktu = "Karma dla psa", ilość = 2 },
-                    new { idProduktu = 102, nazwaProduktu = "Piłka", ilość = 1 }
-                }
+                orderId = 1,
+                orderDate = DateTime.UtcNow,
+                products = new[] {
+                    new { productId = 0, productyName = "Fluffy friend", quantity = 2 },
+                },
+                orderPrice = 100
             }
         };
 
-        return Ok(new { username, roles, historiaZamowien = history });
+        return Ok(new { username, roles, orderHistory = history });
     }
 
     public class ChangePasswordRequest
@@ -62,12 +62,51 @@ public class AccountController : ControllerBase
         if (user == null)
             return NotFound();
 
-        if (user.PasswordHash != req.OldPassword)
-            return BadRequest("Niepoprawne stare hasło.");
+        var result = _hasher.VerifyHashedPassword(user, user.PasswordHash, req.OldPassword);
+        if (result != PasswordVerificationResult.Success)
+            return BadRequest("Wrong old password.");
 
-        user.PasswordHash = req.NewPassword;
+        user.PasswordHash = _hasher.HashPassword(user, req.NewPassword);
         await _context.SaveChangesAsync();
 
-        return Ok("Hasło zostało zmienione.");
+        return Ok("Password has been changed.");
+    }
+
+
+    [HttpGet("admin data (products/clients)")]
+    [Authorize(Roles = "Administrator")]
+    public async Task<IActionResult> GetAdminData([FromQuery] string type)
+    {
+        if (string.IsNullOrEmpty(type))
+            return BadRequest("Musisz podać parametr 'type' (products lub clients).");
+
+        if (type == "products")
+        {
+            var products = new[]
+            {
+            new { Id = 1, Name = "Fluffy Bear", Quantity = 10 },
+            new { Id = 2, Name = "Soft Cat", Quantity = 5 },
+        };
+
+            return Ok(products);
+        }
+        else if (type == "clients")
+        {
+            var clients = await _context.Users
+                .Include(u => u.UserRoles)
+                    .ThenInclude(ur => ur.Role)
+                .Where(u => u.UserRoles.Any(ur => ur.Role.Name == "Client"))
+                .Select(u => new
+                {
+                    u.Username,
+                    u.Email,
+                    u.CreatedAt
+                })
+                .ToListAsync();
+
+            return Ok(clients);
+        }
+
+        return BadRequest("Unknown data type. Use 'products' or 'clients'.");
     }
 }
