@@ -27,7 +27,8 @@ public class LoginService : ILoginService
     public string Login(string username, string password)
     {
         var user = _context.Users
-            .Include(u => u.Roles)
+            .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
             .FirstOrDefault(u => u.Username == username);
 
         if (user == null)
@@ -37,7 +38,7 @@ public class LoginService : ILoginService
         if (result == PasswordVerificationResult.Failed)
             throw new InvalidCredentialsException();
 
-        var roles = user.Roles.Select(r => r.Name).ToList();
+        var roles = user.UserRoles.Select(ur => ur.Role.Name).ToList(); 
         return _jwtTokenService.GenerateTOken(user.Id, user.Username, roles);
     }
 

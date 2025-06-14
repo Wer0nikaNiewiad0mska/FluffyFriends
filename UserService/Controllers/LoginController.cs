@@ -43,8 +43,8 @@ public class LoginController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] User.Domain.Models.RegisterRequest req)
     {
-        if (!Regex.IsMatch(req.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-            return BadRequest("Not real email address.");
+        //if (!Regex.IsMatch(req.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+          //  return BadRequest("Not real email address.");
 
         var existing = await _context.Users.FirstOrDefaultAsync(u => u.Username == req.Username);
         if (existing != null)
@@ -59,7 +59,10 @@ public class LoginController : ControllerBase
             Username = req.Username,
             Email = req.Email,
             PasswordHash = _hasher.HashPassword(null, req.Password),
-            Roles = new List<Role> { clientRole }
+            UserRoles = new List<UserRole>
+            {
+                new UserRole { Role = clientRole }
+            }
         };
 
         _context.Users.Add(user);
@@ -67,25 +70,14 @@ public class LoginController : ControllerBase
 
         return Ok("Account created.");
     }
-    /*
-    [HttpGet("me")]
-    [Authorize]
-    public IActionResult GetUser()
-    {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var username = User.FindFirstValue(ClaimTypes.Name);
-        var roles = User.FindAll(ClaimTypes.Role).Select(r => r.Value).ToList();
-
-        return Ok(new { username, roles });
-    } */
-
+   
     [HttpGet("admin")]
     [Authorize(Policy = "AdminOnly")]
     public IActionResult AdminOnly()
     {
         return Ok("Admin access");
     }
-
+    
     [HttpGet("employee")]
     [Authorize(Policy = "EmployeeOnly")]
     public IActionResult EmployeeOnly()
