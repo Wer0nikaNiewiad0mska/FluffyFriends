@@ -17,9 +17,9 @@ public class EShopSeeder(DataContext context) : IEShopSeeder
         {
             var categories = new List<Category>
             {
-                new Category { Name = "Plushies", created_by = Guid.NewGuid(), updated_by = Guid.NewGuid() },
-                new Category { Name = "Keychains", created_by = Guid.NewGuid(), updated_by = Guid.NewGuid() },
-                new Category { Name = "Stationery", created_by = Guid.NewGuid(), updated_by = Guid.NewGuid() }
+                new Category { Name = "Plushies", created_by = 0, updated_by = 0 },
+                new Category { Name = "Keychains", created_by = 0, updated_by = 0 },
+                new Category { Name = "Stationery", created_by = 0, updated_by = 0 }
             };
 
             context.Categories.AddRange(categories);
@@ -42,8 +42,8 @@ public class EShopSeeder(DataContext context) : IEShopSeeder
                     stock = 30,
                     sku = "PLSH-SHARK-001",
                     category = plushies!,
-                    created_by = Guid.NewGuid(),
-                    updated_by = Guid.NewGuid(),
+                    created_by = 0,
+                    updated_by = 0,
                 },
                 new Product
                 {
@@ -53,8 +53,8 @@ public class EShopSeeder(DataContext context) : IEShopSeeder
                     stock = 40,
                     sku = "PLSH-HAMSTER-001",
                     category = plushies!,
-                    created_by = Guid.NewGuid(),
-                    updated_by = Guid.NewGuid(),
+                    created_by = 0,
+                    updated_by = 0,
                 },
                 new Product
                 {
@@ -64,8 +64,8 @@ public class EShopSeeder(DataContext context) : IEShopSeeder
                     stock = 100,
                     sku = "KEYC-CUTE-001",
                     category = keychains!,
-                    created_by = Guid.NewGuid(),
-                    updated_by = Guid.NewGuid(),
+                    created_by = 0,
+                    updated_by = 0,
                 },
                 new Product
                 {
@@ -75,8 +75,8 @@ public class EShopSeeder(DataContext context) : IEShopSeeder
                     stock = 80,
                     sku = "STAT-NOTE-001",
                     category = stationery!,
-                    created_by = Guid.NewGuid(),
-                    updated_by = Guid.NewGuid(),
+                    created_by = 0,
+                    updated_by = 0,
                 }
             };
 

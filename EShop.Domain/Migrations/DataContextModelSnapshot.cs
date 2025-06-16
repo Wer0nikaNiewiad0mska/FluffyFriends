@@ -30,14 +30,14 @@ namespace EShop.Domain.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("created_at")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("created_by")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("created_by")
+                        .HasColumnType("int");
 
                     b.Property<bool>("deleted")
                         .HasColumnType("bit");
@@ -45,8 +45,8 @@ namespace EShop.Domain.Migrations
                     b.Property<DateTime>("updated_at")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("updated_by")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("updated_by")
+                        .HasColumnType("int");
 
                     b.HasKey("id");
 
@@ -73,8 +73,8 @@ namespace EShop.Domain.Migrations
                     b.Property<DateTime>("created_at")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("created_by")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("created_by")
+                        .HasColumnType("int");
 
                     b.Property<bool>("deleted")
                         .HasColumnType("bit");
@@ -82,8 +82,8 @@ namespace EShop.Domain.Migrations
                     b.Property<DateTime>("updated_at")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("updated_by")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("updated_by")
+                        .HasColumnType("int");
 
                     b.HasKey("id");
 
@@ -109,8 +109,8 @@ namespace EShop.Domain.Migrations
                     b.Property<DateTime>("created_at")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("created_by")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("created_by")
+                        .HasColumnType("int");
 
                     b.Property<bool>("deleted")
                         .HasColumnType("bit");
@@ -118,8 +118,8 @@ namespace EShop.Domain.Migrations
                     b.Property<DateTime>("updated_at")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("updated_by")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("updated_by")
+                        .HasColumnType("int");
 
                     b.HasKey("id");
 
@@ -144,8 +144,8 @@ namespace EShop.Domain.Migrations
                     b.Property<DateTime>("created_at")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("created_by")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("created_by")
+                        .HasColumnType("int");
 
                     b.Property<bool>("deleted")
                         .HasColumnType("bit");
@@ -167,8 +167,8 @@ namespace EShop.Domain.Migrations
                     b.Property<DateTime>("updated_at")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("updated_by")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("updated_by")
+                        .HasColumnType("int");
 
                     b.HasKey("id");
 

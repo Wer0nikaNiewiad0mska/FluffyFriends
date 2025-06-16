@@ -34,8 +34,8 @@ public class ProductServiceTests
             stock = 10,
             sku = "TEST-001",
             category = category,
-            created_by = Guid.NewGuid(),
-            updated_by = Guid.NewGuid()
+            created_by = 1,
+            updated_by = 1
         };
 
         // Act
@@ -62,8 +62,8 @@ public class ProductServiceTests
             stock = 1,
             sku = "SKU-123",
             category = new Category { Name = "Books" },
-            created_by = Guid.NewGuid(),
-            updated_by = Guid.NewGuid()
+            created_by = 1,
+            updated_by = 1
         };
 
         await service.AddAsync(product);
@@ -88,8 +88,8 @@ public class ProductServiceTests
             stock = 5,
             sku = "SKU-321",
             category = new Category { Name = "Electronics" },
-            created_by = Guid.NewGuid(),
-            updated_by = Guid.NewGuid()
+            created_by = 1,
+            updated_by = 1
         };
 
         await service.AddAsync(product);
@@ -116,8 +116,8 @@ public class ProductServiceTests
             stock = 3,
             sku = "SKU-DEL",
             category = new Category { Name = "Fashion" },
-            created_by = Guid.NewGuid(),
-            updated_by = Guid.NewGuid()
+            created_by = 1,
+            updated_by = 1
         };
 
         await service.AddAsync(product);
@@ -144,8 +144,8 @@ public class ProductServiceTests
             stock = 20,
             sku = "BOOK-001",
             category = category,
-            created_by = Guid.NewGuid(),
-            updated_by = Guid.NewGuid()
+            created_by = 1,
+            updated_by = 1
         });
 
         await service.AddAsync(new Product
@@ -156,8 +156,8 @@ public class ProductServiceTests
             stock = 5,
             sku = "ELEC-001",
             category = new Category { Name = "Electronics" },
-            created_by = Guid.NewGuid(),
-            updated_by = Guid.NewGuid()
+            created_by = 1,
+            updated_by = 1
         });
 
         var books = (await service.GetByCategoryAsync("Books")).ToList();

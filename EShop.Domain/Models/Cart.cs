@@ -9,6 +9,6 @@ namespace EShop.Domain.Models;
 public class Cart : BaseModel
 {
     public int id { get; set; }
-    public Guid UserId { get; set; }
+    public int UserId { get; set; }
     public ICollection<CartItem> Items { get; set; } = new List<CartItem>();
 }

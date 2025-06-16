@@ -52,9 +52,14 @@ public class CartController : ControllerBase
         return NoContent();
     }
 
-    private Guid GetUserId()
+    private int GetUserId()
     {
-        var claim = User.FindFirst("userId");
-        return claim != null ? Guid.Parse(claim.Value) : throw new UnauthorizedAccessException();
+        // ClaimTypes.NameIdentifier = "nameid" to domyślny klucz w tokenie
+        var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+
+        if (claim == null || !int.TryParse(claim.Value, out var id))
+            throw new UnauthorizedAccessException("Brak ID użytkownika w tokenie");
+
+        return id;
     }
 }

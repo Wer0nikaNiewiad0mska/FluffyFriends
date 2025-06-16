@@ -18,15 +18,15 @@ public class CartService : ICartService
         _cartRepository = cartRepository;
     }
 
-    public Task<Cart?> GetCartAsync(Guid userId)
+    public Task<Cart?> GetCartAsync(int userId)
         => _cartRepository.GetByUserIdAsync(userId);
 
-    public Task AddItemAsync(Guid userId, int productId, int quantity)
+    public Task AddItemAsync(int userId, int productId, int quantity)
         => _cartRepository.AddOrUpdateItemAsync(userId, productId, quantity);
 
-    public Task RemoveItemAsync(Guid userId, int productId)
+    public Task RemoveItemAsync(int userId, int productId)
         => _cartRepository.RemoveItemAsync(userId, productId);
 
-    public Task ClearCartAsync(Guid userId)
+    public Task ClearCartAsync(int userId)
         => _cartRepository.ClearCartAsync(userId);
 }

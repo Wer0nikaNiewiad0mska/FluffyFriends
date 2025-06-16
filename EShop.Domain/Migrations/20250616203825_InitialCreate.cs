@@ -17,10 +17,10 @@ namespace EShop.Domain.Migrations
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    updated_by = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    updated_by = table.Column<int>(type: "int", nullable: false),
                     updated_at = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    created_by = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    created_by = table.Column<int>(type: "int", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
                     deleted = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -36,9 +36,9 @@ namespace EShop.Domain.Migrations
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    updated_by = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    updated_by = table.Column<int>(type: "int", nullable: false),
                     updated_at = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    created_by = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    created_by = table.Column<int>(type: "int", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
                     deleted = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -59,9 +59,9 @@ namespace EShop.Domain.Migrations
                     stock = table.Column<int>(type: "int", nullable: false),
                     sku = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     categoryid = table.Column<int>(type: "int", nullable: false),
-                    updated_by = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    updated_by = table.Column<int>(type: "int", nullable: false),
                     updated_at = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    created_by = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    created_by = table.Column<int>(type: "int", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
                     deleted = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -85,9 +85,9 @@ namespace EShop.Domain.Migrations
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     CartId = table.Column<int>(type: "int", nullable: false),
-                    updated_by = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    updated_by = table.Column<int>(type: "int", nullable: false),
                     updated_at = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    created_by = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    created_by = table.Column<int>(type: "int", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
                     deleted = table.Column<bool>(type: "bit", nullable: false)
                 },

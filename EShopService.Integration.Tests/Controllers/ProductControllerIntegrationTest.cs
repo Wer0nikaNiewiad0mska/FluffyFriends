@@ -58,8 +58,8 @@ public class ProductControllerIntegrationTest : IClassFixture<WebApplicationFact
             var category = new Category
             {
                 Name = "TestCategory",
-                created_by = Guid.NewGuid(),
-                updated_by = Guid.NewGuid()
+                created_by = 1,
+                updated_by = 1
             };
 
             await dbContext.Categories.AddAsync(category);
@@ -75,8 +75,8 @@ public class ProductControllerIntegrationTest : IClassFixture<WebApplicationFact
                     price = 10.0m,
                     stock = 100,
                     category = category,
-                    created_by = Guid.NewGuid(),
-                    updated_by = Guid.NewGuid()
+                    created_by = 1,
+                    updated_by = 1
                 },
                 new Product
                 {
@@ -86,8 +86,8 @@ public class ProductControllerIntegrationTest : IClassFixture<WebApplicationFact
                     price = 20.0m,
                     stock = 50,
                     category = category,
-                    created_by = Guid.NewGuid(),
-                    updated_by = Guid.NewGuid()
+                    created_by = 1,
+                    updated_by = 1
                 }
             };
 
