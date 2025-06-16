@@ -9,11 +9,11 @@ using OrderProcessingService.Data;
 
 #nullable disable
 
-namespace OrderProcessingService.Migrations
+namespace OrderProcessingService.Data.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    [Migration("20250604132716_InitOrders")]
-    partial class InitOrders
+    [Migration("20250616211048_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,8 +38,8 @@ namespace OrderProcessingService.Migrations
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

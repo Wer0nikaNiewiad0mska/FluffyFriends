@@ -8,7 +8,7 @@ using OrderProcessingService.Data;
 
 #nullable disable
 
-namespace OrderProcessingService.Migrations
+namespace OrderProcessingService.Data.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
     partial class OrderDbContextModelSnapshot : ModelSnapshot
@@ -35,8 +35,8 @@ namespace OrderProcessingService.Migrations
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

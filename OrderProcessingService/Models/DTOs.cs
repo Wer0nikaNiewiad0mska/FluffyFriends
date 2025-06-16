@@ -15,7 +15,6 @@ public class OrderItemDto
 
 public class ProcessOrderRequest
 {
-    public Guid UserId { get; set; }
     public List<OrderItemDto> Items { get; set; } = new();
     public string? DiscountCode { get; set; } 
 }

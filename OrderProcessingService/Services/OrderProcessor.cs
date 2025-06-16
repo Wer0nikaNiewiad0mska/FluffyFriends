@@ -19,10 +19,10 @@ public class OrderProcessor
         _httpClientFactory = httpClientFactory;
     }
 
-    public async Task<Guid> ProcessOrderAsync(ProcessOrderRequest request)
+    public async Task<Guid> ProcessOrderAsync(int userId, ProcessOrderRequest request)
     {
         var client = _httpClientFactory.CreateClient();
-        var order = new Order { UserId = request.UserId };
+        var order = new Order { UserId = userId };
 
         foreach (var item in request.Items)
         {
