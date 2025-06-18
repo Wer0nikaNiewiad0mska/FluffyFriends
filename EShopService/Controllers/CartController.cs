@@ -25,7 +25,22 @@ public class CartController : ControllerBase
     {
         var userId = GetUserId();
         var cart = await _cartRepository.GetByUserIdAsync(userId);
-        return Ok(cart?.Items ?? []);
+
+        if (cart == null)
+            return Ok(new CartDto()); // pusty koszyk
+
+        var dto = new CartDto
+        {
+            Items = cart.Items.Select(i => new CartItemDto
+            {
+                ProductId = i.ProductId,
+                ProductName = i.Product.Name,
+                Quantity = i.Quantity,
+                UnitPrice = i.Product.price
+            }).ToList()
+        };
+
+        return Ok(dto);
     }
 
     [HttpPost("items")]
