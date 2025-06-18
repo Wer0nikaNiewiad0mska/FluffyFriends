@@ -5,6 +5,7 @@ using OrderProcessingService.Hubs;
 using OrderProcessingService.Services;
 using System.Threading.Tasks;
 using System;
+using OrderProcessingService.Models;
 
 namespace OrderProcessingService;
 
@@ -24,6 +25,10 @@ public class Program
 
         builder.Services.AddScoped<OrderProcessor>();
         builder.Services.AddHostedService<PaymentSimulator>();
+        builder.Services.AddScoped<EmailService>();
+        builder.Services.AddScoped<ReceiptGenerator>();
+        builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("Smtp"));
+
 
         var app = builder.Build();
 

@@ -22,7 +22,14 @@ public class OrderProcessor
     public async Task<Guid> ProcessOrderAsync(int userId, ProcessOrderRequest request)
     {
         var client = _httpClientFactory.CreateClient();
-        var order = new Order { UserId = userId };
+        var user = await client.GetFromJsonAsync<UserDto>($"https://localhost:7001/api/users/{userId}");
+
+        var order = new Order
+        {
+            UserId = userId,
+            Username = user?.Username ?? "Nieznany",
+            Email = user?.Email ?? "brak@mail.com"
+        };
 
         foreach (var item in request.Items)
         {
