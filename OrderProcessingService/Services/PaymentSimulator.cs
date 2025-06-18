@@ -26,7 +26,6 @@ public class PaymentSimulator : BackgroundService
         {
             using var scope = _provider.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<OrderDbContext>();
-            var client = scope.ServiceProvider.GetRequiredService<HttpClient>();
             var generator = scope.ServiceProvider.GetRequiredService<ReceiptGenerator>();
             var emailService = scope.ServiceProvider.GetRequiredService<EmailService>();
 
@@ -35,9 +34,12 @@ public class PaymentSimulator : BackgroundService
                 .Include(o => o.Items)
                 .ToListAsync(stoppingToken);
 
-            // pobierz wszystkie produkty (1 zapytanie zamiast 1 na każdy produkt)
-            var allProducts = await client.GetFromJsonAsync<List<ProductDto>>("https://localhost:5001/api/products");
-            var productMap = allProducts?.ToDictionary(p => p.Id, p => p.Name) ?? new();
+            //Wyłączone zapytanie HTTP – zamiast tego mock żeby pokazać, że działa:
+            var productMap = new Dictionary<int, string>
+            {
+                { 1, "Adaś the Shark" },
+                { 2, "Kiki the Hamster" },
+            };
 
             foreach (var order in pending)
             {
@@ -49,15 +51,17 @@ public class PaymentSimulator : BackgroundService
                 {
                     OrderId = order.Id,
                     UserId = order.UserId,
-                    Email = order.Email,          // używamy danych z bazy
-                    Username = order.Username,    // używamy danych z bazy
+                    Email = order.Email,
+                    Username = order.Username,
                     PaidAt = DateTime.UtcNow,
                     Total = order.Total,
                     Items = order.Items.Select(i => new OrderItemDto
                     {
                         ProductId = i.ProductId,
                         Quantity = i.Quantity,
-                        ProductName = productMap.TryGetValue(i.ProductId, out var name) ? name : $"Produkt {i.ProductId}"
+                        ProductName = productMap.TryGetValue(i.ProductId, out var name)
+                            ? name
+                            : $"Produkt {i.ProductId}"
                     }).ToList()
                 };
 

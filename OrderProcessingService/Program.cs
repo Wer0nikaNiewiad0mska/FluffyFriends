@@ -79,7 +79,7 @@ public class Program
         {
             new Claim(ClaimTypes.NameIdentifier, "1"), // UserId
             new Claim(ClaimTypes.Name, "demo"),
-            new Claim(ClaimTypes.Email, "demo@example.com")
+            new Claim(ClaimTypes.Email, "fluffyfriendspp4@gmailcom")
         };
 
                 var identity = new ClaimsIdentity(claims, "Fake");

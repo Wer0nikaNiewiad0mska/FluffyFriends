@@ -24,7 +24,7 @@ public class OrderProcessor
         var client = _httpClientFactory.CreateClient();
         var user = new UserDto
         {
-            Email = "demo@example.com",
+            Email = "fluffyfriendspp4@gmailcom",
             Username = "demo"
         };
 
