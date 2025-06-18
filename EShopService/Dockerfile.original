@@ -1,0 +1,29 @@
+# Etap budowania
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /app
+
+# Kopiowanie plików .csproj i przywracanie zale¿noœci
+COPY ["EShopService/EShopService.csproj", "EShopService/"]
+COPY ["EShop.Application/EShop.Application.csproj", "EShop.Application/"]
+COPY ["EShop.Domain/EShop.Domain.csproj", "EShop.Domain/"]
+RUN dotnet restore "EShopService/EShopService.csproj"
+
+# Kopiowanie pozosta³ych plików projektu
+COPY EShopService/. EShopService/
+COPY EShop.Application/. EShop.Application/
+COPY EShop.Domain/. EShop.Domain/
+
+WORKDIR /app/EShopService
+RUN dotnet build "EShopService.csproj" -c Release -o /app/build
+
+# Etap publikowania
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+WORKDIR /app
+
+# Kopiowanie zbudowanych artefaktów
+COPY --from=build /app/build .
+
+# Ustawienie portu
+EXPOSE 7003
+
+ENTRYPOINT ["dotnet", "EShopService.dll"]

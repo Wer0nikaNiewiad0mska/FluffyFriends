@@ -43,8 +43,8 @@ public class LoginController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] User.Domain.Models.RegisterRequest req)
     {
-        //if (!Regex.IsMatch(req.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-          //  return BadRequest("Not real email address.");
+        if (!Regex.IsMatch(req.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            return BadRequest("Not real email address.");
 
         var existing = await _context.Users.FirstOrDefaultAsync(u => u.Username == req.Username);
         if (existing != null)
