@@ -46,11 +46,6 @@ public class AccountController : ControllerBase
         return Ok(new { username, roles, orderHistory = history });
     }
 
-    public class ChangePasswordRequest
-    {
-        public string OldPassword { get; set; } = default!;
-        public string NewPassword { get; set; } = default!;
-    }
 
     [HttpPost("change password")]
 
