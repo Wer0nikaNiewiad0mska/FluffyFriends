@@ -43,8 +43,8 @@ public class LoginController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] User.Domain.Models.RegisterRequest req)
     {
-        //if (!Regex.IsMatch(req.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-          //  return BadRequest("Not real email address.");
+        if (!Regex.IsMatch(req.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            return BadRequest("Not real email address.");
 
         var existing = await _context.Users.FirstOrDefaultAsync(u => u.Username == req.Username);
         if (existing != null)
@@ -70,7 +70,42 @@ public class LoginController : ControllerBase
 
         return Ok("Account created.");
     }
-   
+
+    [HttpPost("register-employee")]
+    [Authorize(Policy = "AdminOnly")]
+    public async Task<IActionResult> RegisterEmployee([FromBody] User.Domain.Models.RegisterRequest req)
+    {
+        if (!Regex.IsMatch(req.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            return BadRequest("Not a real email address.");
+
+        var existing = await _context.Users.FirstOrDefaultAsync(u => u.Username == req.Username);
+        if (existing != null)
+            return Conflict("Username already exists.");
+
+        var employeeRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Employee");
+        if (employeeRole == null)
+        {
+            return StatusCode(500, "Role 'Employee' not found in the database. Please ensure roles are seeded.");
+        }
+
+        var user = new User_
+        {
+            Username = req.Username,
+            Email = req.Email,
+            PasswordHash = _hasher.HashPassword(null, req.Password),
+            UserRoles = new List<UserRole>
+                {
+                    new UserRole { Role = employeeRole }
+                }
+        };
+
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+
+        return Ok("Employee account created.");
+    }
+
+
     [HttpGet("admin")]
     [Authorize(Policy = "AdminOnly")]
     public IActionResult AdminOnly()

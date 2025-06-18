@@ -3,7 +3,7 @@
 public class OrderPaidEvent
 {
     public Guid OrderId { get; set; }
-    public Guid UserId { get; set; }
+    public int UserId { get; set; }
     public string Email { get; set; } = string.Empty;
     public DateTime PaidAt { get; set; }
     public decimal Total { get; set; }
