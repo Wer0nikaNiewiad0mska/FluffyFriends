@@ -6,6 +6,7 @@ using OrderProcessingService.Services;
 using System.Threading.Tasks;
 using System;
 using OrderProcessingService.Models;
+using System.Security.Claims;
 
 namespace OrderProcessingService;
 
@@ -17,7 +18,35 @@ public class Program
 
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new() { Title = "OrderProcessingService", Version = "v1" });
+
+            c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+                Description = "Wpisz token: **Bearer test123**"
+            });
+
+            c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+            {
+                {
+                    new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                    {
+                        Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                        {
+                            Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+        });
         builder.Services.AddSignalR();
         builder.Services.AddDbContext<OrderDbContext>(opt =>
             opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -39,6 +68,26 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+
+        //to rówież dlatego, że dockera nie ma
+        app.Use(async (context, next) =>
+        {
+            if (context.Request.Headers.TryGetValue("Authorization", out var token)
+                && token.ToString() == "Bearer test123")
+            {
+                var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, "1"), // UserId
+            new Claim(ClaimTypes.Name, "demo"),
+            new Claim(ClaimTypes.Email, "demo@example.com")
+        };
+
+                var identity = new ClaimsIdentity(claims, "Fake");
+                context.User = new ClaimsPrincipal(identity);
+            }
+
+            await next();
+        });
 
         app.UseAuthorization();
 

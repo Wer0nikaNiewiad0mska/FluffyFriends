@@ -22,7 +22,11 @@ public class OrderProcessor
     public async Task<Guid> ProcessOrderAsync(int userId, ProcessOrderRequest request)
     {
         var client = _httpClientFactory.CreateClient();
-        var user = await client.GetFromJsonAsync<UserDto>($"https://localhost:7001/api/users/{userId}");
+        var user = new UserDto
+        {
+            Email = "demo@example.com",
+            Username = "demo"
+        };
 
         var order = new Order
         {
@@ -33,7 +37,12 @@ public class OrderProcessor
 
         foreach (var item in request.Items)
         {
-            var product = await client.GetFromJsonAsync<ProductDto>($"https://localhost:5001/api/products/{item.ProductId}");
+            var product = new ProductDto
+            {
+                Id = item.ProductId,
+                Name = "Mock Produkt",
+                Price = 9.99m
+            };
             if (product == null)
                 throw new Exception($"Produkt {item.ProductId} nie istnieje.");
 

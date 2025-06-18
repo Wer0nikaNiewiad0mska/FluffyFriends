@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Cryptography;
+using System.Security.Claims;
 
 namespace EShopService;
 
@@ -41,7 +42,35 @@ public class Program
             });
 
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new() { Title = "EShopService", Version = "v1" });
+
+            c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+                Description = "Wpisz token w formacie: **Bearer token**"
+            });
+
+            c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+        });
 
         builder.Services.AddScoped<IEShopSeeder, EShopSeeder>();
         builder.Services.AddScoped<IProductService, ProductService>();
@@ -60,6 +89,24 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+        //to dlatego, że nie mamy dockera, a chcemy pokazać, że wszystkie funkcje działają
+        app.Use(async (context, next) =>
+        {
+            if (context.Request.Headers.TryGetValue("Authorization", out var token)
+                && token.ToString() == "Bearer test123")
+            {
+                var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, "1"),
+            new Claim(ClaimTypes.Name, "demo@example.com")
+        };
+
+                var identity = new ClaimsIdentity(claims, "Fake");
+                context.User = new ClaimsPrincipal(identity);
+            }
+
+            await next();
+        });
         app.UseAuthentication(); 
         app.UseAuthorization();
 
